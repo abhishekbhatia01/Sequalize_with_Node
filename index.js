@@ -1,7 +1,7 @@
 const express = require('express');
 const { sequelize } = require('./src/config/dbConnect'); // 👈 import sequelize
 const userRoutes = require('./src/routes/userRouter.route');
-
+require('./association')
 const app = express();
 
 app.use(express.json());
