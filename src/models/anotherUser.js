@@ -17,6 +17,7 @@ const AnotherUser = sequelize.define(
   {
     freezeTableName: true,
     timestamps: true,
+    paranoid: true,
   },
 );
 

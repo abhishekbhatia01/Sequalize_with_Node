@@ -8,7 +8,7 @@ app.use(express.json());
 app.use('/users', userRoutes);
 
 // 👇 yahan sync lagao
-sequelize.sync()
+sequelize.sync({force: false})
   .then(() => {
     console.log("DB synced ✅");
 

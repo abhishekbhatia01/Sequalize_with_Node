@@ -1,6 +1,8 @@
 const { anotherUser } = require("../models/anotherUser");
 const { userProfile } = require("../models/userProfile");
 const { postModel } = require("../models/postModel");
+const { courseModel } = require("../models/courseModel");
+
 
 const createUser = async (req, res) => {
   try {
@@ -66,9 +68,10 @@ const getUserWithPost = async (req, res) => {
   try {
     const users = await anotherUser.findAll({
       include: {
-        model: postModel,
-        as: "UserPost",
-      },
+        model: courseModel,
+        as: "courses",
+        attributes: { exclude: ["createdAt", "updatedAt"] },
+      }
     });
 
     res.status(201).json({
@@ -84,9 +87,55 @@ const getUserWithPost = async (req, res) => {
   }
 };
 
+
+const create = async (req, res) => {
+  try {
+    const user1 = await anotherUser.create({ username: "Abhi" });
+    const user2 = await anotherUser.create({ username: "Abhishek" });
+
+    const math = await courseModel.create({ title: "Math" });
+    const science = await courseModel.create({ title: "Science" });
+
+    await user1.addCourses([math, science]);
+    await user2.addCourse(math);
+
+    return res.status(201).json({
+      message: "User created successfully",
+      user1,
+      user2
+    })
+  } catch (error) {
+    return res.status(500).json({
+      error: error.message,
+    });
+  }
+}
+
+
+const deleteUser = async (req, res) => {
+  try {
+    await anotherUser.destroy({
+      where :{
+        id: req.body.id
+      }
+    });
+
+    return res.status(200).json({
+      message: "User deleted successfully"
+    })
+  } catch (error) {
+    
+    return res.status(500).json({
+      error: error.message,
+    });
+  }
+}
+
 module.exports = {
   createUser,
   getUser,
   createBlog,
   getUserWithPost,
+  create,
+  deleteUser
 };
